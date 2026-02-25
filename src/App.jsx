@@ -246,6 +246,126 @@ const THEMES = {
     input:   "#111111",
     header:  "#00695C",   // Muted Teal Green
   },
+
+  // ── 6a. Olive Garden Feast — Light ───────────────────────────────────────
+  "oliveLight": {
+    bg:      "#FEFAE0",    // Cornsilk - warm cream background
+    card:    "#FFFFFF",
+    cardAlt: "#F5F2E3",
+    border:  "#DDA15E",    // Light Caramel border
+    text:    "#283618",    // Black Forest text
+    sub:     "#606C38",    // Olive Leaf subtitle
+    accent:  "#BC6C25",    // Copper accent
+    adk:     "#FEFAE0",
+    pill:    "#F5F2E3",
+    input:   "#FFFFFF",
+    header:  "#606C38",    // Olive Leaf header
+  },
+
+  // ── 6b. Olive Garden Feast — Dark ────────────────────────────────────────
+  "oliveDark": {
+    bg:      "#283618",    // Black Forest background
+    card:    "#3A4A24",
+    cardAlt: "#4A5C2F",
+    border:  "#606C38",    // Olive Leaf border
+    text:    "#FEFAE0",    // Cornsilk text
+    sub:     "#A3B18A",    // Muted sage
+    accent:  "#DDA15E",    // Light Caramel accent
+    adk:     "#283618",
+    pill:    "#3A4A24",
+    input:   "#3A4A24",
+    header:  "#BC6C25",    // Copper header
+  },
+
+  // ── 7a. Earthy Forest Hues — Light ───────────────────────────────────────
+  "forestLight": {
+    bg:      "#FFFFFF",
+    card:    "#DAD7CD",    // Dust Grey cards
+    cardAlt: "#C8C5BA",
+    border:  "#A3B18A",    // Dry Sage border
+    text:    "#344E41",    // Pine Teal text
+    sub:     "#588157",    // Fern subtitle
+    accent:  "#3A5A40",    // Hunter Green accent
+    adk:     "#FFFFFF",
+    pill:    "#E8E6DC",
+    input:   "#DAD7CD",
+    header:  "#3A5A40",    // Hunter Green header
+  },
+
+  // ── 7b. Earthy Forest Hues — Dark ────────────────────────────────────────
+  "forestDark": {
+    bg:      "#1A2820",    // Deep forest background
+    card:    "#344E41",    // Pine Teal cards
+    cardAlt: "#3A5A40",    // Hunter Green alternate
+    border:  "#588157",    // Fern border
+    text:    "#DAD7CD",    // Dust Grey text
+    sub:     "#A3B18A",    // Dry Sage subtitle
+    accent:  "#A3B18A",    // Dry Sage accent
+    adk:     "#1A2820",
+    pill:    "#2A3D32",
+    input:   "#344E41",
+    header:  "#588157",    // Fern header
+  },
+
+  // ── 8a. Black & Gold Elegance — Light ────────────────────────────────────
+  "eleganceLight": {
+    bg:      "#FFFFFF",
+    card:    "#E5E5E5",    // Alabaster Grey cards
+    cardAlt: "#D8D8D8",
+    border:  "#C0C0C0",
+    text:    "#14213D",    // Prussian Blue text
+    sub:     "#5A6A8A",    // Muted Prussian
+    accent:  "#FCA311",    // Orange accent
+    adk:     "#000000",
+    pill:    "#F0F0F0",
+    input:   "#E5E5E5",
+    header:  "#14213D",    // Prussian Blue header
+  },
+
+  // ── 8b. Black & Gold Elegance — Dark ─────────────────────────────────────
+  "eleganceDark": {
+    bg:      "#000000",
+    card:    "#14213D",    // Prussian Blue cards
+    cardAlt: "#1B2A4A",
+    border:  "#2A3A5A",
+    text:    "#FFFFFF",
+    sub:     "#B8C0D0",
+    accent:  "#FCA311",    // Orange accent
+    adk:     "#000000",
+    pill:    "#0D1827",
+    input:   "#14213D",
+    header:  "#FCA311",    // Orange header
+  },
+
+  // ── 9a. Deep Sea — Light ──────────────────────────────────────────────────
+  "deepSeaLight": {
+    bg:      "#FFFFFF",
+    card:    "#E0E1DD",    // Alabaster Grey cards
+    cardAlt: "#D0D1CD",
+    border:  "#778DA9",    // Lavender Grey border
+    text:    "#0D1B2A",    // Ink Black text
+    sub:     "#415A77",    // Dusk Blue subtitle
+    accent:  "#1B263B",    // Prussian Blue accent
+    adk:     "#FFFFFF",
+    pill:    "#ECECEA",
+    input:   "#E0E1DD",
+    header:  "#1B263B",    // Prussian Blue header
+  },
+
+  // ── 9b. Deep Sea — Dark ───────────────────────────────────────────────────
+  "deepSeaDark": {
+    bg:      "#0D1B2A",    // Ink Black background
+    card:    "#1B263B",    // Prussian Blue cards
+    cardAlt: "#273447",
+    border:  "#415A77",    // Dusk Blue border
+    text:    "#E0E1DD",    // Alabaster Grey text
+    sub:     "#778DA9",    // Lavender Grey subtitle
+    accent:  "#778DA9",    // Lavender Grey accent
+    adk:     "#0D1B2A",
+    pill:    "#15202F",
+    input:   "#1B263B",
+    header:  "#415A77",    // Dusk Blue header
+  },
 };
 
 /** Metadata for the theme picker UI */
@@ -254,11 +374,79 @@ const THEME_META = [
     id:       "eva3",
     name:     "Royal Laurel",
     nameCN:   "皇家月桂",
+    desc:     "Elegant gold and warm earth tones evoking luxury and comfort.",
     emoji:    "✨",
     lightKey: "eva3Light",
     darkKey:  "eva3Dark",
-    previewBg:     "#1C1917",
-    previewAccent: "#D4AF37",
+    colors: [
+      { name: "Soft Gold", hex: "#C5A059", desc: "Warm, buttery elegance" },
+      { name: "Ebony Wood", hex: "#4B433B", desc: "Rich, grounded sophistication" },
+      { name: "Warm Cream", hex: "#FAF9F6", desc: "Soft, inviting lightness" },
+    ],
+  },
+  {
+    id:       "olive",
+    name:     "Olive Garden Feast",
+    nameCN:   "橄欖園盛宴",
+    desc:     "Earthy olive and moss dance with creamy beige, warm gold, and rustic copper, evoking harvest feasts.",
+    emoji:    "🫒",
+    lightKey: "oliveLight",
+    darkKey:  "oliveDark",
+    colors: [
+      { name: "Olive Leaf", hex: "#606C38", desc: "Muted green brushstrokes suggest olive trees and sunlit fields" },
+      { name: "Black Forest", hex: "#283618", desc: "Intense, nearly black green invokes dense evergreens" },
+      { name: "Cornsilk", hex: "#FEFAE0", desc: "Creamy pale yellow shade like fresh cornsilk" },
+      { name: "Light Caramel", hex: "#DDA15E", desc: "Warm, buttery, and smooth—evokes syrupy caramel" },
+      { name: "Copper", hex: "#BC6C25", desc: "Reddish-brown metallic gleam recalls glinting coins" },
+    ],
+  },
+  {
+    id:       "forest",
+    name:     "Earthy Forest Hues",
+    nameCN:   "大地森林",
+    desc:     "Olive green, rich moss, and earthy taupes conjure tranquil forests as rejuvenating outdoors.",
+    emoji:    "🌲",
+    lightKey: "forestLight",
+    darkKey:  "forestDark",
+    colors: [
+      { name: "Dust Grey", hex: "#DAD7CD", desc: "Subtle, soft tone mirroring dusted stone" },
+      { name: "Dry Sage", hex: "#A3B18A", desc: "Gentle, earthy yellow-green whispers calm" },
+      { name: "Fern", hex: "#588157", desc: "Earthy and grounding, feels like sunlit leaves" },
+      { name: "Hunter Green", hex: "#3A5A40", desc: "Evokes rugged wilderness and rich forest canopies" },
+      { name: "Pine Teal", hex: "#344E41", desc: "Cool teal whispers of pine needles and mountain rivers" },
+    ],
+  },
+  {
+    id:       "elegance",
+    name:     "Black & Gold Elegance",
+    nameCN:   "黑金優雅",
+    desc:     "Bold black, regal gold, deep navy, and luminous whites exude class, assurance, and creative power.",
+    emoji:    "👔",
+    lightKey: "eleganceLight",
+    darkKey:  "eleganceDark",
+    colors: [
+      { name: "Black", hex: "#000000", desc: "Complete absorption of light radiates sophistication and strength" },
+      { name: "Prussian Blue", hex: "#14213D", desc: "Inky, profound blue filled with gravitas and mystery" },
+      { name: "Orange", hex: "#FCA311", desc: "Pure vibrant spectrum orange energizes the senses" },
+      { name: "Alabaster Grey", hex: "#E5E5E5", desc: "Pale, misty grey whispers of modern elegance" },
+      { name: "White", hex: "#FFFFFF", desc: "Brilliant and absolute, reflecting endless possibility" },
+    ],
+  },
+  {
+    id:       "deepSea",
+    name:     "Deep Sea",
+    nameCN:   "深海",
+    desc:     "Midnight navy, foggy teal, and arctic white channel oceanic depths and serene power for mystery.",
+    emoji:    "🌊",
+    lightKey: "deepSeaLight",
+    darkKey:  "deepSeaDark",
+    colors: [
+      { name: "Ink Black", hex: "#0D1B2A", desc: "Ultra-dark with a hint of blue, reminiscent of deep inkwells" },
+      { name: "Prussian Blue", hex: "#1B263B", desc: "Inky, profound blue filled with gravitas and mystery" },
+      { name: "Dusk Blue", hex: "#415A77", desc: "Elegant blend of twilight blues, reminiscent of clear evening skies" },
+      { name: "Lavender Grey", hex: "#778DA9", desc: "Muted, elegant blend of purple and grey" },
+      { name: "Alabaster Grey", hex: "#E0E1DD", desc: "Pale, misty grey whispers of modern elegance" },
+    ],
   },
 ];
 
@@ -865,8 +1053,226 @@ function StatsView({ crew, flights, onBack, showAcStats, showRouteStats, c }) {
 // User preferences: account, dark mode, defaults, custom tags,
 // saved routes, data backup/import, and danger zone.
 // ═════════════════════════════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────────────────────────────────
+// §11  THEME GALLERY VIEW
+// Displays all available themes with their color palettes and allows selection.
+// ─────────────────────────────────────────────────────────────────────────────
+
+function ThemeGalleryView({ onBack, themeKey, setThemeKey, c }) {
+  const [selectedTheme, setSelectedTheme] = useState(null);
+
+  const currentThemeId = THEME_META.find(
+    m => m.lightKey === themeKey || m.darkKey === themeKey
+  )?.id;
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", height: "100dvh", overflow: "hidden" }}>
+      <NavBar sub="THEMES" title="主題畫廊 🎨" onBack={onBack} c={c} />
+
+      <div style={{ flex: 1, overflowY: "auto", overflowX: "hidden", padding: "16px 16px 100px", WebkitOverflowScrolling: "touch" }}>
+        
+        {/* Header */}
+        <div style={{ marginBottom: 20 }}>
+          <div style={{ fontSize: 11, letterSpacing: 3, color: c.sub, fontWeight: 700, marginBottom: 6 }}>
+            選擇你的外觀 CHOOSE YOUR LOOK
+          </div>
+          <div style={{ fontSize: 13, color: c.sub, lineHeight: 1.5 }}>
+            Each theme offers light and dark modes. Tap a theme to see its colors, then select your preferred mode.
+          </div>
+        </div>
+
+        {/* Theme Cards */}
+        {THEME_META.map(meta => {
+          const isActive = meta.id === currentThemeId;
+          const isExpanded = selectedTheme === meta.id;
+          const usingLight = themeKey === meta.lightKey;
+          const usingDark = themeKey === meta.darkKey;
+
+          return (
+            <div key={meta.id} style={{ marginBottom: 14 }}>
+              {/* Theme Header - Always Visible */}
+              <div
+                onClick={() => setSelectedTheme(isExpanded ? null : meta.id)}
+                style={{
+                  background: isActive ? `${c.accent}15` : c.card,
+                  border: `1px solid ${isActive ? c.accent : c.border}`,
+                  borderRadius: 16,
+                  padding: "14px 16px",
+                  cursor: "pointer",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: meta.desc ? 8 : 0 }}>
+                  <span style={{ fontSize: 24, flexShrink: 0 }}>{meta.emoji}</span>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 16, fontWeight: 800, color: isActive ? c.accent : c.text, marginBottom: 2 }}>
+                      {meta.name}
+                    </div>
+                    <div style={{ fontSize: 11, color: c.sub, fontWeight: 600 }}>
+                      {meta.nameCN}
+                    </div>
+                  </div>
+                  {isActive && (
+                    <div style={{ 
+                      fontSize: 10, 
+                      fontWeight: 700, 
+                      color: c.accent, 
+                      background: `${c.accent}20`, 
+                      borderRadius: 8, 
+                      padding: "3px 10px",
+                      whiteSpace: "nowrap"
+                    }}>
+                      ✓ 使用中
+                    </div>
+                  )}
+                </div>
+
+                {/* Description */}
+                {meta.desc && (
+                  <div style={{ 
+                    fontSize: 12, 
+                    color: c.sub, 
+                    lineHeight: 1.5, 
+                    fontStyle: "italic",
+                    borderTop: `1px solid ${c.border}`,
+                    paddingTop: 8,
+                    marginTop: 8
+                  }}>
+                    {meta.desc}
+                  </div>
+                )}
+              </div>
+
+              {/* Expanded Color Palette & Mode Selection */}
+              {isExpanded && (
+                <div style={{ 
+                  background: c.cardAlt, 
+                  border: `1px solid ${c.border}`,
+                  borderTop: "none",
+                  borderRadius: "0 0 16px 16px",
+                  padding: "12px 16px 16px",
+                  marginTop: -1
+                }}>
+                  {/* Colors Section */}
+                  {meta.colors && meta.colors.length > 0 && (
+                    <div style={{ marginBottom: 14 }}>
+                      <div style={{ fontSize: 10, letterSpacing: 2, color: c.sub, fontWeight: 700, marginBottom: 10 }}>
+                        COLORS
+                      </div>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                        {meta.colors.map((color, idx) => (
+                          <div 
+                            key={idx}
+                            style={{ 
+                              display: "flex", 
+                              alignItems: "flex-start", 
+                              gap: 10,
+                              background: c.card,
+                              borderRadius: 10,
+                              padding: "8px 10px"
+                            }}
+                          >
+                            {/* Color Swatch */}
+                            <div 
+                              style={{ 
+                                width: 32, 
+                                height: 32, 
+                                borderRadius: 8, 
+                                background: color.hex,
+                                border: `1px solid ${c.border}`,
+                                flexShrink: 0
+                              }} 
+                            />
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 2 }}>
+                                <span style={{ fontSize: 13, fontWeight: 700, color: c.text }}>
+                                  ~{color.name}
+                                </span>
+                                <span style={{ fontSize: 10, fontFamily: "monospace", color: c.sub }}>
+                                  {color.hex}
+                                </span>
+                              </div>
+                              <div style={{ fontSize: 11, color: c.sub, lineHeight: 1.4 }}>
+                                {color.desc}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Light/Dark Mode Selection */}
+                  <div>
+                    <div style={{ fontSize: 10, letterSpacing: 2, color: c.sub, fontWeight: 700, marginBottom: 8 }}>
+                      SELECT MODE
+                    </div>
+                    <div style={{ display: "flex", gap: 8 }}>
+                      <button
+                        onClick={() => setThemeKey(meta.lightKey)}
+                        style={{
+                          flex: 1,
+                          background: usingLight ? c.accent : c.pill,
+                          color: usingLight ? c.adk : c.sub,
+                          border: "none",
+                          borderRadius: 10,
+                          padding: "10px",
+                          fontSize: 13,
+                          fontWeight: 700,
+                          cursor: "pointer",
+                          fontFamily: "inherit",
+                        }}
+                      >
+                        ☀ Light Mode
+                      </button>
+                      <button
+                        onClick={() => setThemeKey(meta.darkKey)}
+                        style={{
+                          flex: 1,
+                          background: usingDark ? c.accent : c.pill,
+                          color: usingDark ? c.adk : c.sub,
+                          border: "none",
+                          borderRadius: 10,
+                          padding: "10px",
+                          fontSize: 13,
+                          fontWeight: 700,
+                          cursor: "pointer",
+                          fontFamily: "inherit",
+                        }}
+                      >
+                        🌙 Dark Mode
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+
+        {/* Footer Note */}
+        <div style={{ 
+          textAlign: "center", 
+          fontSize: 11, 
+          color: c.sub, 
+          marginTop: 24,
+          padding: "12px 16px",
+          background: c.cardAlt,
+          borderRadius: 12
+        }}>
+          💡 Tip: Your theme preference is saved automatically
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// §12  SETTINGS VIEW
+// ─────────────────────────────────────────────────────────────────────────────
+
 function SettingsView({
-  onBack, c, themeKey, setThemeKey, username, onLogout, onExport, onGoGuide, onGoStats,
+  onBack, c, themeKey, setThemeKey, username, onLogout, onExport, onGoGuide, onGoStats, onGoThemes,
   defaultAircraft, setDefaultAircraft, defaultPosition, setDefaultPosition,
   customTags, setCustomTags, onImport, routes, setRoutes, flights,
 }) {
@@ -1168,14 +1574,13 @@ function SettingsView({
         {/* ── Theme Picker ── */}
         <Sect label="外觀主題 THEMES" c={c}>
           <SettingsRow 
-            icon="✨" 
-            label="Royal Laurel 皇家月桂"
-            sub={`當前使用 ${dark ? '深色 🌙' : '淺色 ☀'} 模式 · 點擊切換或探索更多主題`}
-            onClick={() => {
-              // Toggle between light and dark mode for now
-              // Future: Navigate to theme gallery with more options
-              setThemeKey(dark ? "eva3Light" : "eva3Dark");
-            }}
+            icon="🎨" 
+            label={(() => {
+              const current = THEME_META.find(m => m.lightKey === themeKey || m.darkKey === themeKey);
+              return current ? `${current.name} ${current.emoji}` : "Select Theme";
+            })()} 
+            sub={`當前使用 ${dark ? '深色 🌙' : '淺色 ☀'} 模式 · 點擊探索更多主題`}
+            onClick={onGoThemes}
             c={c}
           />
         </Sect>
@@ -3745,6 +4150,15 @@ export default function App() {
           <StatsView crew={crew} flights={flights} onBack={() => setView("settings")} showAcStats={appShowAcStats} showRouteStats={appShowRouteStats} c={c} />
         )}
 
+        {view === "themes" && (
+          <ThemeGalleryView 
+            onBack={() => setView("settings")} 
+            themeKey={themeKey} 
+            setThemeKey={setThemeKey}
+            c={c} 
+          />
+        )}
+
         {view === "settings" && (
           <SettingsView
             onBack={() => setView("dashboard")}
@@ -3756,6 +4170,7 @@ export default function App() {
             onExport={exportJSON}
             onGoGuide={() => setView("guide")}
             onGoStats={() => setView("stats")}
+            onGoThemes={() => setView("themes")}
             defaultAircraft={defaultAircraft}
             setDefaultAircraft={setDefaultAircraft}
             defaultPosition={defaultPosition}
