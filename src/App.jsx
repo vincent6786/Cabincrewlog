@@ -37,8 +37,8 @@ const OTP_EXPIRY_MS = 15 * 60 * 1000;
 
 /** Built-in tags (shown for all users, cannot be deleted). */
 const PRESET_TAGS = [
-  "#好咖", "#難搞", "#細心", "#新人",
-  "#好笑", "#專業", "#八卦", "#準時",
+  "#Standard & SOP",
+  // "#好笑", "#專業", "#八卦", "#準時",
 ];
 
 /** Selectable aircraft types. */
@@ -263,7 +263,7 @@ const THEME_META = [
   {
     id:       "eva2",
     name:     "Shiatzy Chen",
-    nameCN:   "夏姿·陳制服",
+    nameCN:   "夏姿",
     emoji:    "🌿",
     lightKey: "eva2Light",
     darkKey:  "eva2Dark",
