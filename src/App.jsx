@@ -251,26 +251,6 @@ const THEMES = {
 /** Metadata for the theme picker UI */
 const THEME_META = [
   {
-    id:       "eva1",
-    name:     "Boarding Look",
-    nameCN:   "登機外觀",
-    emoji:    "🛫",
-    lightKey: "eva1Light",
-    darkKey:  "eva1Dark",
-    previewBg:     "#0B1A14",
-    previewAccent: "#FF7324",
-  },
-  {
-    id:       "eva2",
-    name:     "Shiatzy Chen",
-    nameCN:   "夏姿",
-    emoji:    "🌿",
-    lightKey: "eva2Light",
-    darkKey:  "eva2Dark",
-    previewBg:     "#121212",
-    previewAccent: "#D30E24",
-  },
-  {
     id:       "eva3",
     name:     "Royal Laurel",
     nameCN:   "皇家月桂",
@@ -279,26 +259,6 @@ const THEME_META = [
     darkKey:  "eva3Dark",
     previewBg:     "#1C1917",
     previewAccent: "#D4AF37",
-  },
-  {
-    id:       "eva4",
-    name:     "Sky Scarf",
-    nameCN:   "天空絲巾",
-    emoji:    "🌈",
-    lightKey: "eva4Light",
-    darkKey:  "eva4Dark",
-    previewBg:     "#0A192F",
-    previewAccent: "#4FC3F7",
-  },
-  {
-    id:       "eva5",
-    name:     "Tech Log",
-    nameCN:   "技術日誌",
-    emoji:    "🖥",
-    lightKey: "eva5Light",
-    darkKey:  "eva5Dark",
-    previewBg:     "#000000",
-    previewAccent: "#00E676",
   },
 ];
 
@@ -1207,78 +1167,17 @@ function SettingsView({
 
         {/* ── Theme Picker ── */}
         <Sect label="外觀主題 THEMES" c={c}>
-          <div style={{ background: c.card, border: `1px solid ${c.border}`, borderRadius: 14, padding: 14 }}>
-            <div style={{ fontSize: 12, color: c.sub, marginBottom: 12 }}>選擇你的主題風格 · Choose your look</div>
-            {THEME_META.map(meta => {
-              const isActiveSwatch = themeKey === meta.lightKey || themeKey === meta.darkKey;
-              return (
-                <div
-                  key={meta.id}
-                  style={{
-                    background:   isActiveSwatch ? `${c.accent}18` : c.cardAlt,
-                    border:       `1px solid ${isActiveSwatch ? c.accent : c.border}`,
-                    borderRadius: 12,
-                    padding:      "10px 12px",
-                    marginBottom: 8,
-                    cursor:       "pointer",
-                  }}
-                >
-                  {/* Theme name row */}
-                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-                    <span style={{ fontSize: 18 }}>{meta.emoji}</span>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: 13, fontWeight: 800, color: isActiveSwatch ? c.accent : c.text }}>
-                        {meta.name}
-                      </div>
-                      <div style={{ fontSize: 10, color: c.sub }}>{meta.nameCN}</div>
-                    </div>
-                    {isActiveSwatch && (
-                      <span style={{ fontSize: 10, fontWeight: 700, color: c.accent, background: `${c.accent}20`, borderRadius: 6, padding: "2px 8px" }}>
-                        ✓ 使用中
-                      </span>
-                    )}
-                  </div>
-                  {/* Light / Dark buttons */}
-                  <div style={{ display: "flex", gap: 6 }}>
-                    <button
-                      onClick={() => setThemeKey(meta.lightKey)}
-                      style={{
-                        flex:         1,
-                        background:   themeKey === meta.lightKey ? c.accent : c.pill,
-                        color:        themeKey === meta.lightKey ? c.adk    : c.sub,
-                        border:       "none",
-                        borderRadius: 8,
-                        padding:      "7px 0",
-                        fontSize:     12,
-                        fontWeight:   700,
-                        cursor:       "pointer",
-                        fontFamily:   "inherit",
-                      }}
-                    >
-                      ☀ 淺色
-                    </button>
-                    <button
-                      onClick={() => setThemeKey(meta.darkKey)}
-                      style={{
-                        flex:         1,
-                        background:   themeKey === meta.darkKey ? c.accent : c.pill,
-                        color:        themeKey === meta.darkKey ? c.adk    : c.sub,
-                        border:       "none",
-                        borderRadius: 8,
-                        padding:      "7px 0",
-                        fontSize:     12,
-                        fontWeight:   700,
-                        cursor:       "pointer",
-                        fontFamily:   "inherit",
-                      }}
-                    >
-                      🌙 深色
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+          <SettingsRow 
+            icon="✨" 
+            label="Royal Laurel 皇家月桂"
+            sub={`當前使用 ${dark ? '深色 🌙' : '淺色 ☀'} 模式 · 點擊切換或探索更多主題`}
+            onClick={() => {
+              // Toggle between light and dark mode for now
+              // Future: Navigate to theme gallery with more options
+              setThemeKey(dark ? "eva3Light" : "eva3Dark");
+            }}
+            c={c}
+          />
         </Sect>
 
         {/* ── Quick Actions ── */}
@@ -2332,9 +2231,9 @@ export default function App() {
 
   // ── §13.1  Theme ──────────────────────────────────────────────────────────
   const [themeKey, setThemeKey] = useState(() => {
-    return localStorage.getItem("cl-theme") || "eva1Dark";
+    return localStorage.getItem("cl-theme") || "eva3Dark";
   });
-  const c      = THEMES[themeKey] || THEMES["eva1Dark"];
+  const c      = THEMES[themeKey] || THEMES["eva3Dark"];
   const isDark = themeKey.endsWith("Dark");
   const gs     = makeGlobalStyles(c, isDark);
 
