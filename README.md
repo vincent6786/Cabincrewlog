@@ -175,11 +175,11 @@ The default theme on first install is **Night Flight (eva1Dark)**.
 ### Cabin Positions
 | Code | Role | 中文 |
 |---|---|---|
-| CP | Chief Purser | 座艙長 |
-| DP | Deputy Purser | 副座艙長 |
-| AP | Assistant Purser | 副事務長 |
-| CA | Cabin Attendant | 客艙組員 |
-| TA | Trainee Attendant | 訓練組員 |
+| CP | Chief Purser | 事務長 |
+| DP | Deputy Purser | 副事務長 |
+| AP | Assistant Purser | 助理事務長 |
+| CA | Cabin Attendant | 一般組員 |
+| TA | Trainee Attendant | 實習組員 |
 
 ---
 
