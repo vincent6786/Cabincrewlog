@@ -450,6 +450,78 @@ const THEME_META = [
   },
 ];
 
+// ─────────────────────────────────────────────────────────────────────────────
+// §3.5  FONT SYSTEM
+// Multiple font options for users to customize their reading experience.
+// ─────────────────────────────────────────────────────────────────────────────
+
+const FONTS = [
+  {
+    id: "syne",
+    name: "Syne Modern",
+    nameCN: "現代感",
+    family: "'Syne', 'Noto Sans JP', sans-serif",
+    desc: "Bold, geometric, contemporary — the default CrewLog look",
+    emoji: "✨",
+  },
+  {
+    id: "inter",
+    name: "Inter Clean",
+    nameCN: "簡潔",
+    family: "'Inter', 'Noto Sans JP', sans-serif",
+    desc: "Clean, readable, professional — perfect for data-heavy views",
+    emoji: "📊",
+  },
+  {
+    id: "poppins",
+    name: "Poppins Friendly",
+    nameCN: "友善",
+    family: "'Poppins', 'Noto Sans JP', sans-serif",
+    desc: "Warm, approachable, rounded — great for casual logging",
+    emoji: "😊",
+  },
+  {
+    id: "space",
+    name: "Space Grotesk",
+    nameCN: "科技感",
+    family: "'Space Grotesk', 'Noto Sans JP', sans-serif",
+    desc: "Technical, precise, aviation-inspired — cockpit aesthetic",
+    emoji: "✈️",
+  },
+  {
+    id: "work",
+    name: "Work Sans",
+    nameCN: "專業",
+    family: "'Work Sans', 'Noto Sans JP', sans-serif",
+    desc: "Professional, balanced, versatile — suited for all content",
+    emoji: "💼",
+  },
+  {
+    id: "manrope",
+    name: "Manrope",
+    nameCN: "優雅",
+    family: "'Manrope', 'Noto Sans JP', sans-serif",
+    desc: "Elegant, refined, minimalist — sophisticated and timeless",
+    emoji: "🎩",
+  },
+  {
+    id: "dm-sans",
+    name: "DM Sans",
+    nameCN: "清晰",
+    family: "'DM Sans', 'Noto Sans JP', sans-serif",
+    desc: "Crisp, clear, highly legible — optimized for screens",
+    emoji: "📱",
+  },
+  {
+    id: "source",
+    name: "Source Sans",
+    nameCN: "平衡",
+    family: "'Source Sans 3', 'Noto Sans JP', sans-serif",
+    desc: "Balanced, neutral, harmonious — Adobe's trusted workhorse",
+    emoji: "⚖️",
+  },
+];
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 // §4  FIRESTORE DOCUMENT REFERENCES
@@ -538,8 +610,8 @@ const EMPTY_FORM = {
  * Includes font imports, box-model reset, scrollbar styling,
  * and mobile UX tweaks (tap highlight, overscroll lock, button feedback).
  */
-const makeGlobalStyles = (c, isDark) => `
-  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
+const makeGlobalStyles = (c, isDark, fontFamily = "'Syne','Noto Sans JP',sans-serif") => `
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Noto+Sans+JP:wght@300;400;500;700&family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Work+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;700;800&family=Source+Sans+3:wght@400;600;700&display=swap');
 
   *, *::before, *::after {
     box-sizing: border-box;
@@ -558,7 +630,7 @@ const makeGlobalStyles = (c, isDark) => `
   }
 
   input, textarea, button {
-    font-family: 'Syne', 'Noto Sans JP', sans-serif;
+    font-family: ${fontFamily};
   }
 
   /* Prevent iOS Safari from zooming in when an input is focused.
@@ -1272,7 +1344,7 @@ function ThemeGalleryView({ onBack, themeKey, setThemeKey, c }) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 function SettingsView({
-  onBack, c, themeKey, setThemeKey, username, onLogout, onExport, onGoGuide, onGoStats, onGoThemes,
+  onBack, c, themeKey, setThemeKey, fontKey, setFontKey, username, onLogout, onExport, onGoGuide, onGoStats, onGoThemes,
   defaultAircraft, setDefaultAircraft, defaultPosition, setDefaultPosition,
   customTags, setCustomTags, onImport, routes, setRoutes, flights,
 }) {
@@ -1583,6 +1655,69 @@ function SettingsView({
             onClick={onGoThemes}
             c={c}
           />
+        </Sect>
+
+        {/* ── Font Selector ── */}
+        <Sect label="字體樣式 FONT STYLE" c={c}>
+          <div style={{ background: c.card, border: `1px solid ${c.border}`, borderRadius: 14, padding: 14 }}>
+            <div style={{ fontSize: 12, color: c.sub, marginBottom: 14 }}>
+              選擇你喜歡的字體風格 · Choose your preferred font style
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {FONTS.map(f => {
+                const isActive = fontKey === f.id;
+                return (
+                  <button
+                    key={f.id}
+                    onClick={() => setFontKey(f.id)}
+                    style={{
+                      background: isActive ? `${c.accent}15` : c.cardAlt,
+                      border: `1px solid ${isActive ? c.accent : c.border}`,
+                      borderRadius: 12,
+                      padding: "12px 14px",
+                      cursor: "pointer",
+                      fontFamily: f.family,
+                      textAlign: "left",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 10,
+                    }}
+                  >
+                    <span style={{ fontSize: 20, flexShrink: 0 }}>{f.emoji}</span>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ 
+                        fontSize: 14, 
+                        fontWeight: 700, 
+                        color: isActive ? c.accent : c.text,
+                        marginBottom: 2
+                      }}>
+                        {f.name}
+                      </div>
+                      <div style={{ fontSize: 10, color: c.sub, marginBottom: 3 }}>
+                        {f.nameCN}
+                      </div>
+                      <div style={{ fontSize: 11, color: c.sub, lineHeight: 1.4, fontStyle: "italic" }}>
+                        {f.desc}
+                      </div>
+                    </div>
+                    {isActive && (
+                      <div style={{ 
+                        fontSize: 10, 
+                        fontWeight: 700, 
+                        color: c.accent, 
+                        background: `${c.accent}20`, 
+                        borderRadius: 8, 
+                        padding: "3px 10px",
+                        flexShrink: 0
+                      }}>
+                        ✓ 使用中
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </Sect>
 
         {/* ── Quick Actions ── */}
@@ -2634,13 +2769,18 @@ function MyLogView({ flights, crew, username, onBack, onGoProfile, onEdit, c }) 
 // ═════════════════════════════════════════════════════════════════════════════
 export default function App() {
 
-  // ── §13.1  Theme ──────────────────────────────────────────────────────────
+  // ── §13.1  Theme & Font ───────────────────────────────────────────────────
   const [themeKey, setThemeKey] = useState(() => {
     return localStorage.getItem("cl-theme") || "eva3Dark";
   });
+  const [fontKey, setFontKey] = useState(() => {
+    return localStorage.getItem("cl-font") || "syne";
+  });
+  
   const c      = THEMES[themeKey] || THEMES["eva3Dark"];
   const isDark = themeKey.endsWith("Dark");
-  const gs     = makeGlobalStyles(c, isDark);
+  const font   = FONTS.find(f => f.id === fontKey) || FONTS[0];
+  const gs     = makeGlobalStyles(c, isDark, font.family);
 
   // ── §13.2  Auth state ─────────────────────────────────────────────────────
   // authStep: "loading" | "passcode" | "personal" | "register" | "forgot" | "otp" | "resetpw" | "app"
@@ -2733,6 +2873,7 @@ export default function App() {
   // ─────────────────────────────────────────────────────────────────────────
 
   useEffect(() => { localStorage.setItem("cl-theme",      themeKey);                          }, [themeKey]);
+  useEffect(() => { localStorage.setItem("cl-font",       fontKey);                           }, [fontKey]);
   useEffect(() => { localStorage.setItem("cl-customTags", JSON.stringify(customTags));      }, [customTags]);
   useEffect(() => { localStorage.setItem("cl-defaultAC",  defaultAircraft);                 }, [defaultAircraft]);
   useEffect(() => { localStorage.setItem("cl-defaultPos", defaultPosition);                 }, [defaultPosition]);
@@ -4098,7 +4239,7 @@ export default function App() {
     <>
       <style>{gs}</style>
       <div style={{
-        fontFamily:  "'Syne','Noto Sans JP',sans-serif",
+        fontFamily:  font.family,
         background:  c.bg,
         color:       c.text,
         minHeight:   "100vh",
@@ -4165,6 +4306,8 @@ export default function App() {
             c={c}
             themeKey={themeKey}
             setThemeKey={setThemeKey}
+            fontKey={fontKey}
+            setFontKey={setFontKey}
             username={username}
             onLogout={logout}
             onExport={exportJSON}
