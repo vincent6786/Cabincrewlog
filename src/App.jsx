@@ -3351,7 +3351,7 @@ export default function App() {
             </div>
           </div>
           <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-            <button onClick={() => setDark(d => !d)} style={{ background: c.pill, border: "none", color: c.sub, borderRadius: 10, padding: "8px 10px", cursor: "pointer", fontSize: 16 }}>{dark ? "☀" : "🌙"}</button>
+            <button onClick={() => setThemeKey(tk => tk.endsWith("Dark") ? tk.replace("Dark", "Light") : tk.replace("Light", "Dark"))} style={{ background: c.pill, border: "none", color: c.sub, borderRadius: 10, padding: "8px 10px", cursor: "pointer", fontSize: 16 }}>{isDark ? "☀" : "🌙"}</button>
             <button onClick={() => setView("settings")} style={{ background: c.pill, border: "none", color: c.sub, borderRadius: 10, padding: "8px 10px", cursor: "pointer", fontSize: 16 }}>⚙</button>
           </div>
         </div>
