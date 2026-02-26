@@ -788,6 +788,9 @@ function NavBar({ title, sub, onBack, right, c }) {
       display:       "flex",
       alignItems:    "center",
       gap:           10,
+      position:      "sticky",
+      top:           0,
+      zIndex:        10,
     }}>
       {onBack && (
         <button
@@ -2748,7 +2751,15 @@ function MyLogView({ flights, crew, username, onBack, onGoProfile, onEdit, c }) 
       />
 
       {/* Search bar */}
-      <div style={{ padding: "10px 16px", background: c.card, borderBottom: `1px solid ${c.border}`, flexShrink: 0 }}>
+      <div style={{ 
+        padding: "10px 16px", 
+        background: c.card, 
+        borderBottom: `1px solid ${c.border}`, 
+        flexShrink: 0,
+        position: "sticky",
+        top: "calc(env(safe-area-inset-top) + 56px)",
+        zIndex: 9,
+      }}>
         <div style={{ position: "relative" }}>
           <span style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", color: c.sub, zIndex: 1, pointerEvents: "none", fontSize: 14 }}>🔍</span>
           <ClearableInput
@@ -3901,7 +3912,15 @@ export default function App() {
     <div style={{ display: "flex", flexDirection: "column", height: "100dvh", overflow: "hidden" }}>
 
       {/* ── Header ── */}
-      <div style={{ padding: "18px 16px 12px", background: c.card, borderBottom: `1px solid ${c.border}`, flexShrink: 0 }}>
+      <div style={{ 
+        padding: "calc(env(safe-area-inset-top) + 18px) 16px 12px", 
+        background: c.card, 
+        borderBottom: `1px solid ${c.border}`, 
+        flexShrink: 0,
+        position: "sticky",
+        top: 0,
+        zIndex: 10,
+      }}>
         {/* Top row: title only - buttons moved to bottom nav */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
           <div>
@@ -4108,7 +4127,8 @@ export default function App() {
         width: "100%",
         background: c.card,
         borderTop: `1px solid ${c.border}`,
-        padding: "8px 16px calc(8px + env(safe-area-inset-bottom))",
+        padding: "8px 16px",
+        paddingBottom: "calc(8px + env(safe-area-inset-bottom))",
         display: "flex",
         justifyContent: "space-around",
         alignItems: "center",
@@ -4194,7 +4214,15 @@ export default function App() {
       <div style={{ display: "flex", flexDirection: "column", height: "100dvh", overflow: "hidden" }}>
 
         {/* ── Profile header ── */}
-        <div style={{ padding: "16px 16px 14px", background: si ? si.bg : c.card, borderBottom: `2px solid ${si ? si.border : c.border}`, flexShrink: 0 }}>
+        <div style={{ 
+          padding: "max(16px, env(safe-area-inset-top)) 16px 14px", 
+          background: si ? si.bg : c.card, 
+          borderBottom: `2px solid ${si ? si.border : c.border}`, 
+          flexShrink: 0,
+          position: "sticky",
+          top: 0,
+          zIndex: 10,
+        }}>
           {/* Nav row */}
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
             <button onClick={() => setView("dashboard")} style={{ background: "rgba(128,128,128,0.15)", border: "none", color: c.text, borderRadius: 10, padding: "8px 12px", cursor: "pointer", fontSize: 18 }}>←</button>
@@ -4440,8 +4468,6 @@ export default function App() {
         boxShadow:   "0 0 80px rgba(0,0,0,0.5)",
         overflowX:   "hidden",
         touchAction: "pan-y",
-        paddingTop:  "env(safe-area-inset-top)",
-        paddingBottom: "env(safe-area-inset-bottom)",
       }}>
 
         {/* ── View router ── */}
