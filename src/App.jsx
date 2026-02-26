@@ -4089,7 +4089,7 @@ export default function App() {
             <ClearableInput value={newCrew.id}        onChange={e => setNewCrew(n => ({ ...n, id:        e.target.value }))} placeholder="員工 ID *"        autoComplete="off" style={{ ...inp, fontSize: 13, padding: "9px 12px" }} c={c} />
             <ClearableInput value={newCrew.nickname}  onChange={e => setNewCrew(n => ({ ...n, nickname:  e.target.value }))} placeholder="Nickname *"        autoComplete="off" style={{ ...inp, fontSize: 13, padding: "9px 12px" }} c={c} />
             <ClearableInput value={newCrew.name}      onChange={e => setNewCrew(n => ({ ...n, name:      e.target.value }))} placeholder="姓名 (中文/日文)" autoComplete="off" style={{ ...inp, fontSize: 13, padding: "9px 12px" }} c={c} />
-            <ClearableInput value={newCrew.seniority} onChange={e => setNewCrew(n => ({ ...n, seniority: e.target.value }))} placeholder="期別 e.g. 24G"     autoComplete="off" style={{ ...inp, fontSize: 13, padding: "9px 12px" }} c={c} />
+            <ClearableInput value={newCrew.seniority} onChange={e => setNewCrew(n => ({ ...n, seniority: e.target.value }))} placeholder="期別 e.g. 2020B"     autoComplete="off" style={{ ...inp, fontSize: 13, padding: "9px 12px" }} c={c} />
           </div>
           {addCrewErr && <div style={{ color: "#FF453A", fontSize: 12, marginBottom: 8 }}>{addCrewErr}</div>}
           <button
