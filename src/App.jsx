@@ -1542,6 +1542,11 @@ function SettingsView({
   const [changePwConf,   setChangePwConf]   = useState("");
   const [changePwErr,    setChangePwErr]    = useState("");
   const [changePwOk,     setChangePwOk]     = useState("");
+  // Email management
+  const [emailEdit,      setEmailEdit]      = useState(false);
+  const [tempEmail,      setTempEmail]      = useState("");
+  const [emailErr,       setEmailErr]       = useState("");
+  const [emailOk,        setEmailOk]        = useState("");
   // Usage tracking (admin-only — no private content)
   const [usageData,        setUsageData]        = useState({});
   const [regOpen,          setRegOpen]          = useState(false);   // local copy of toggle
@@ -1573,7 +1578,14 @@ function SettingsView({
   useEffect(() => {
     Promise.all([getDoc(ACCOUNTS_DOC), getDoc(USAGE_DOC), getDoc(APP_SETTINGS_DOC)])
       .then(([accSnap, usageSnap, settSnap]) => {
-        setAccounts(accSnap.exists()   ? (accSnap.data().accounts   || {}) : {});
+        const accs = accSnap.exists() ? (accSnap.data().accounts || {}) : {};
+        setAccounts(accs);
+        // Initialize tempEmail with current user's email
+        const userAcct = typeof accs[username] === "object" 
+          ? accs[username] 
+          : { password: accs[username], email: "" };
+        setTempEmail(userAcct.email || "");
+        
         setUsageData(usageSnap.exists() ? (usageSnap.data().usage   || {}) : {});
         if (settSnap.exists()) {
           const s = settSnap.data();
@@ -1584,7 +1596,7 @@ function SettingsView({
       })
       .catch(() => {})
       .finally(() => setAccsLoading(false));
-  }, []);
+  }, [username]);
 
   /** Add a new account to Firestore */
   const addAccount = async () => {
@@ -1666,6 +1678,36 @@ function SettingsView({
     setChangePwCur(""); setChangePwNew(""); setChangePwConf(""); setChangePwErr("");
     setChangePwOk("✅ 密碼已更新 Password updated!");
     setTimeout(() => { setChangePwOk(""); setChangePwOpen(false); }, 2500);
+  };
+
+  /** Update current user's email address */
+  const updateEmail = async () => {
+    const email = tempEmail.trim();
+    
+    // Validate email format if provided
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setEmailErr("電郵格式錯誤 Invalid email format");
+      return;
+    }
+
+    try {
+      const acct = typeof accounts[username] === "object"
+        ? accounts[username]
+        : { password: accounts[username], email: "" };
+
+      const normalised = Object.fromEntries(
+        Object.entries(accounts).map(([k, v]) => [k, typeof v === "object" ? v : { password: v, email: "" }])
+      );
+      const updated = { ...normalised, [username]: { ...acct, email } };
+      await setDoc(ACCOUNTS_DOC, { accounts: updated });
+      setAccounts(updated);
+      setEmailErr("");
+      setEmailOk(email ? "✅ 電郵已更新 Email updated!" : "✅ 電郵已移除 Email removed!");
+      setTimeout(() => { setEmailOk(""); setEmailEdit(false); }, 2500);
+    } catch (err) {
+      setEmailErr("更新失敗 Update failed");
+      console.error(err);
+    }
   };
 
   /** Reads an imported JSON backup and passes it to the parent handler. */
@@ -2034,6 +2076,76 @@ function SettingsView({
                   </button>
                   <button
                     onClick={() => { setChangePwOpen(false); setChangePwCur(""); setChangePwNew(""); setChangePwConf(""); setChangePwErr(""); }}
+                    style={{ flex: 1, background: c.pill, color: c.sub, border: "none", borderRadius: 10, padding: "10px", fontSize: 13, cursor: "pointer" }}
+                  >
+                    取消
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </Sect>
+
+        {/* ── Email Address ── */}
+        <Sect label="電郵地址 EMAIL ADDRESS" c={c}>
+          <div style={{ background: c.card, border: `1px solid ${c.border}`, borderRadius: 14, padding: 14 }}>
+            {!emailEdit ? (
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: c.text }}>
+                    📧 {tempEmail || "未設定 Not set"}
+                  </div>
+                  <div style={{ fontSize: 11, color: c.sub, marginTop: 2 }}>
+                    {tempEmail 
+                      ? "用於密碼重設 Used for password reset"
+                      : "設定電郵以啟用密碼重設功能 Set email to enable password reset"
+                    }
+                  </div>
+                </div>
+                <button
+                  onClick={() => { 
+                    setEmailEdit(true); 
+                    setEmailErr(""); 
+                    setEmailOk(""); 
+                  }}
+                  style={{ background: c.pill, border: "none", color: c.accent, borderRadius: 8, padding: "7px 12px", fontSize: 12, fontWeight: 700, cursor: "pointer", flexShrink: 0 }}
+                >
+                  {tempEmail ? "✏ 更改" : "+ 新增"}
+                </button>
+              </div>
+            ) : (
+              <div>
+                <div style={{ fontSize: 10, letterSpacing: 2, color: c.sub, fontWeight: 700, marginBottom: 10 }}>
+                  {tempEmail ? "UPDATE EMAIL" : "ADD EMAIL"}
+                </div>
+                <ClearableInput
+                  type="email"
+                  value={tempEmail}
+                  onChange={e => { setTempEmail(e.target.value); setEmailErr(""); }}
+                  onKeyDown={e => e.key === "Enter" && updateEmail()}
+                  placeholder="your.email@example.com"
+                  style={{ ...inp, marginBottom: emailErr || emailOk ? 8 : 12, fontSize: 14 }}
+                  c={c}
+                />
+                {emailErr && <div style={{ color: "#FF453A", fontSize: 11, marginBottom: 10 }}>{emailErr}</div>}
+                {emailOk  && <div style={{ color: "#30D158", fontSize: 11, marginBottom: 10 }}>{emailOk}</div>}
+                <div style={{ display: "flex", gap: 8 }}>
+                  <button
+                    onClick={updateEmail}
+                    style={{ flex: 1, background: c.accent, color: c.adk, border: "none", borderRadius: 10, padding: "10px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}
+                  >
+                    💾 儲存
+                  </button>
+                  <button
+                    onClick={() => { 
+                      setEmailEdit(false); 
+                      // Reset to current saved email
+                      const acct = typeof accounts[username] === "object"
+                        ? accounts[username]
+                        : { password: accounts[username], email: "" };
+                      setTempEmail(acct.email || ""); 
+                      setEmailErr(""); 
+                    }}
                     style={{ flex: 1, background: c.pill, color: c.sub, border: "none", borderRadius: 10, padding: "10px", fontSize: 13, cursor: "pointer" }}
                   >
                     取消
@@ -3251,17 +3363,42 @@ export default function App() {
       const resets   = resSnap.exists() ? (resSnap.data().resets || {}) : {};
       await setDoc(RESETS_DOC, { resets: { ...resets, [uname]: { code, expiry } } });
 
+      // DEBUG: Log what we're sending
+      console.log("🔐 Password Reset Debug:");
+      console.log("→ Username:", uname);
+      console.log("→ Email:", email);
+      console.log("→ OTP Code:", code);
+      console.log("→ Template ID:", EMAILJS_TEMPLATE_ID);
+
+      const emailPayload = {
+        service_id:  EMAILJS_SERVICE_ID,
+        template_id: EMAILJS_TEMPLATE_ID,
+        user_id:     EMAILJS_PUBLIC_KEY,
+        template_params: { 
+          to_email: email, 
+          username: uname, 
+          otp_code: code,
+          from_name: "CrewLog Team",
+          from_email: "noreply@crewlog.app",
+          reply_to: "noreply@crewlog.app"
+        },
+      };
+      console.log("→ Full payload:", JSON.stringify(emailPayload, null, 2));
+
       // Send email via EmailJS REST API
-      await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+      const response = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
         method:  "POST",
         headers: { "Content-Type": "application/json" },
-        body:    JSON.stringify({
-          service_id:  EMAILJS_SERVICE_ID,
-          template_id: EMAILJS_TEMPLATE_ID,
-          user_id:     EMAILJS_PUBLIC_KEY,
-          template_params: { to_email: email, username: uname, otp_code: code },
-        }),
+        body:    JSON.stringify(emailPayload),
       });
+
+      console.log("→ EmailJS Response Status:", response.status);
+      const responseText = await response.text();
+      console.log("→ EmailJS Response:", responseText);
+
+      if (!response.ok) {
+        throw new Error(`EmailJS failed: ${response.status} ${responseText}`);
+      }
 
       setOtpTargetUser(uname);
       setAuthStep("otp");
@@ -4087,9 +4224,9 @@ export default function App() {
           <div style={{ fontSize: 10, color: c.sub, marginBottom: 12 }}>⚠ Shared with all users</div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 8 }}>
             <ClearableInput value={newCrew.id}        onChange={e => setNewCrew(n => ({ ...n, id:        e.target.value }))} placeholder="員工 ID *"        autoComplete="off" style={{ ...inp, fontSize: 13, padding: "9px 12px" }} c={c} />
-            <ClearableInput value={newCrew.nickname}  onChange={e => setNewCrew(n => ({ ...n, nickname:  e.target.value }))} placeholder="Nickname（Eng) *"        autoComplete="off" style={{ ...inp, fontSize: 13, padding: "9px 12px" }} c={c} />
-            <ClearableInput value={newCrew.name}      onChange={e => setNewCrew(n => ({ ...n, name:      e.target.value }))} placeholder="姓名 (Full name)" autoComplete="off" style={{ ...inp, fontSize: 13, padding: "9px 12px" }} c={c} />
-            <ClearableInput value={newCrew.seniority} onChange={e => setNewCrew(n => ({ ...n, seniority: e.target.value }))} placeholder="期別 e.g. 2020B"     autoComplete="off" style={{ ...inp, fontSize: 13, padding: "9px 12px" }} c={c} />
+            <ClearableInput value={newCrew.nickname}  onChange={e => setNewCrew(n => ({ ...n, nickname:  e.target.value }))} placeholder="Nickname *"        autoComplete="off" style={{ ...inp, fontSize: 13, padding: "9px 12px" }} c={c} />
+            <ClearableInput value={newCrew.name}      onChange={e => setNewCrew(n => ({ ...n, name:      e.target.value }))} placeholder="姓名 (中文/日文)" autoComplete="off" style={{ ...inp, fontSize: 13, padding: "9px 12px" }} c={c} />
+            <ClearableInput value={newCrew.seniority} onChange={e => setNewCrew(n => ({ ...n, seniority: e.target.value }))} placeholder="期別 e.g. 24G"     autoComplete="off" style={{ ...inp, fontSize: 13, padding: "9px 12px" }} c={c} />
           </div>
           {addCrewErr && <div style={{ color: "#FF453A", fontSize: 12, marginBottom: 8 }}>{addCrewErr}</div>}
           <button
