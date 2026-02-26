@@ -2737,7 +2737,7 @@ function MyLogView({ flights, crew, username, onBack, onGoProfile, onEdit, c }) 
     <div style={{ display: "flex", flexDirection: "column", height: "100dvh", overflow: "hidden" }}>
       <NavBar
         sub="MY LOGBOOK"
-        title={`${username} 的飛行日誌`}
+        title={`${username} 的飛行日記`}
         onBack={onBack}
         c={c}
         right={
@@ -3911,6 +3911,24 @@ export default function App() {
               <SyncBadge syncStatus={syncStatus} c={c} />
             </div>
           </div>
+          {/* Light/Dark Mode Toggle */}
+          <button
+            onClick={() => setThemeKey(tk => tk.endsWith("Dark") ? tk.replace("Dark", "Light") : tk.replace("Light", "Dark"))}
+            style={{
+              background: c.pill,
+              border: "none",
+              color: c.text,
+              cursor: "pointer",
+              borderRadius: 10,
+              padding: "8px 12px",
+              fontSize: 20,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {isDark ? "☀️" : "🌙"}
+          </button>
         </div>
 
         {/* User / logbook shortcut */}
@@ -3923,7 +3941,7 @@ export default function App() {
             <span style={{ fontSize: 13, fontWeight: 700, color: c.text }}>{username}</span>
             <span style={{ fontSize: 11, color: c.sub }}>· {flights.length} 筆</span>
           </div>
-          <span style={{ fontSize: 11, color: c.accent, fontWeight: 700 }}>日誌 ›</span>
+          <span style={{ fontSize: 11, color: c.accent, fontWeight: 700 }}>日記 ›</span>
         </div>
 
         {/* Search input */}
@@ -4090,7 +4108,7 @@ export default function App() {
         width: "100%",
         background: c.card,
         borderTop: `1px solid ${c.border}`,
-        padding: "8px 16px 12px",
+        padding: "8px 16px calc(8px + env(safe-area-inset-bottom))",
         display: "flex",
         justifyContent: "space-around",
         alignItems: "center",
@@ -4113,26 +4131,7 @@ export default function App() {
           }}
         >
           <span style={{ fontSize: 22 }}>📖</span>
-          <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: 0.5 }}>日誌</span>
-        </button>
-
-        {/* Theme Toggle */}
-        <button
-          onClick={() => setThemeKey(tk => tk.endsWith("Dark") ? tk.replace("Dark", "Light") : tk.replace("Light", "Dark"))}
-          style={{
-            background: "none",
-            border: "none",
-            color: c.sub,
-            cursor: "pointer",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: 2,
-            padding: "4px 12px",
-          }}
-        >
-          <span style={{ fontSize: 22 }}>{isDark ? "☀" : "🌙"}</span>
-          <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: 0.5 }}>主題</span>
+          <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: 0.5 }}>日記</span>
         </button>
 
         {/* Add New (FAB - centered and elevated) */}
@@ -4156,25 +4155,6 @@ export default function App() {
           }}
         >
           +
-        </button>
-
-        {/* Stats */}
-        <button
-          onClick={() => setView("stats")}
-          style={{
-            background: "none",
-            border: "none",
-            color: c.sub,
-            cursor: "pointer",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: 2,
-            padding: "4px 12px",
-          }}
-        >
-          <span style={{ fontSize: 22 }}>📊</span>
-          <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: 0.5 }}>統計</span>
         </button>
 
         {/* Settings */}
@@ -4460,6 +4440,8 @@ export default function App() {
         boxShadow:   "0 0 80px rgba(0,0,0,0.5)",
         overflowX:   "hidden",
         touchAction: "pan-y",
+        paddingTop:  "env(safe-area-inset-top)",
+        paddingBottom: "env(safe-area-inset-bottom)",
       }}>
 
         {/* ── View router ── */}
