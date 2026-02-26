@@ -676,11 +676,6 @@ const makeGlobalStyles = (c, isDark, fontFamily = "'Syne','Noto Sans JP',sans-se
     -webkit-tap-highlight-color: transparent;
   }
 
-  html {
-    /* Support safe area for notch/home indicator */
-    padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
-  }
-
   html, body, #root {
     overflow-x: hidden;
     touch-action: pan-y;
@@ -4465,8 +4460,6 @@ export default function App() {
         boxShadow:   "0 0 80px rgba(0,0,0,0.5)",
         overflowX:   "hidden",
         touchAction: "pan-y",
-        paddingTop:  "env(safe-area-inset-top, 0px)", // Safe area for notch
-        paddingBottom: "env(safe-area-inset-bottom, 0px)",
       }}>
 
         {/* ── View router ── */}
