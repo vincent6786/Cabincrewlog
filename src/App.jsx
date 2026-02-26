@@ -277,6 +277,96 @@ const THEMES = {
     header:  "#BC6C25",    // Copper header
   },
 
+  // ── 8a. Pastel Dreamland — Whimsical Light ───────────────────────────────
+  "pastelLight": {
+    bg:      "#F9F5FF",    // Soft lavender white
+    card:    "#FFFFFF",
+    cardAlt: "#F3ECFF",
+    border:  "#E0B1CB",    // Pink Orchid border
+    text:    "#2D2033",    // Deep text
+    sub:     "#7B6B8C",    // Muted purple
+    accent:  "#C0B4DB",    // Pink Orchid
+    adk:     "#FFFFFF",
+    pill:    "#F3ECFF",
+    input:   "#FFFFFF",
+    header:  "#9F86C0",    // Lilac header
+  },
+
+  // ── 8b. Pastel Dreamland — Dream Dark ────────────────────────────────────
+  "pastelDark": {
+    bg:      "#1A1526",    // Deep purple night
+    card:    "#2A2236",
+    cardAlt: "#342B43",
+    border:  "#4A3E5A",
+    text:    "#E8DEFF",    // Soft lavender text
+    sub:     "#9F86C0",    // Lilac
+    accent:  "#BDE0FE",    // Icy Blue
+    adk:     "#1A1526",
+    pill:    "#2A2236",
+    input:   "#2A2236",
+    header:  "#7B68A6",    // Dusty purple
+  },
+
+  // ── 9a. Bold Berry — Vibrant Light ───────────────────────────────────────
+  "berryLight": {
+    bg:      "#FFF8F3",    // Soft Apricot cream
+    card:    "#FFFFFF",
+    cardAlt: "#FFF0E5",
+    border:  "#FFA5AB",    // Cotton Candy border
+    text:    "#1A0B0B",
+    sub:     "#8B5A6B",    // Muted rose
+    accent:  "#A53860",    // Cherry Rose
+    adk:     "#FFFFFF",
+    pill:    "#FFF0E5",
+    input:   "#FFFFFF",
+    header:  "#DA627D",    // Blush Rose
+  },
+
+  // ── 9b. Bold Berry — Deep Dark ───────────────────────────────────────────
+  "berryDark": {
+    bg:      "#1A0B0D",    // Deep crimson night
+    card:    "#2A161A",
+    cardAlt: "#3A1F24",
+    border:  "#4A2830",
+    text:    "#FFE0E7",    // Soft pink text
+    sub:     "#C8909C",    // Rose gray
+    accent:  "#FFA5AB",    // Cotton Candy
+    adk:     "#1A0B0D",
+    pill:    "#2A161A",
+    input:   "#2A161A",
+    header:  "#A53860",    // Cherry Rose
+  },
+
+  // ── 10a. Purple Dream — Majestic Light ───────────────────────────────────
+  "purpleLight": {
+    bg:      "#F5F3FF",    // Whisper lavender
+    card:    "#FFFFFF",
+    cardAlt: "#EBE5FF",
+    border:  "#BE95C4",    // Lilac border
+    text:    "#231942",    // Dark Amethyst text
+    sub:     "#5E548E",    // Dusty Grape
+    accent:  "#9F86C0",    // Amethyst Smoke
+    adk:     "#FFFFFF",
+    pill:    "#EBE5FF",
+    input:   "#FFFFFF",
+    header:  "#5E548E",    // Dusty Grape header
+  },
+
+  // ── 10b. Purple Dream — Moody Dark ───────────────────────────────────────
+  "purpleDark": {
+    bg:      "#0F0A1E",    // Deep violet night
+    card:    "#1A132E",
+    cardAlt: "#251C3E",
+    border:  "#3A2E52",
+    text:    "#E8DEFF",    // Soft lavender text
+    sub:     "#9F86C0",    // Amethyst Smoke
+    accent:  "#BE95C4",    // Lilac
+    adk:     "#0F0A1E",
+    pill:    "#1A132E",
+    input:   "#1A132E",
+    header:  "#5E548E",    // Dusty Grape
+  },
+
   // ── 7a. Earthy Forest Hues — Light ───────────────────────────────────────
   "forestLight": {
     bg:      "#FFFFFF",
@@ -448,6 +538,54 @@ const THEME_META = [
       { name: "Alabaster Grey", hex: "#E0E1DD", desc: "Pale, misty grey whispers of modern elegance" },
     ],
   },
+  {
+    id:       "pastel",
+    name:     "Pastel Dreamland",
+    nameCN:   "粉彩夢境",
+    desc:     "Whimsical violets, candy pinks, and gentle blues swirl together, evoking sweet clouds and daydreams.",
+    emoji:    "🦄",
+    lightKey: "pastelLight",
+    darkKey:  "pastelDark",
+    colors: [
+      { name: "Pink Orchid", hex: "#C0B4DB", desc: "Creamy pastel lavender-pink fusion, radiates gentle affection" },
+      { name: "Pastel Petal", hex: "#FFC8DD", desc: "Feather-light blend of blush and gentle lilac" },
+      { name: "Blush Pop", hex: "#FFAFCC", desc: "Gleaming sugary pink mixes delicacy and high energy" },
+      { name: "Icy Blue", hex: "#BDE0FE", desc: "Frosty pale blue as fresh as morning ice" },
+      { name: "Sky Blue", hex: "#A2D2FF", desc: "Bright and whimsical, radiates freedom and happy adventures" },
+    ],
+  },
+  {
+    id:       "berry",
+    name:     "Bold Berry",
+    nameCN:   "大膽漿果",
+    desc:     "Caramel, blush, berry velvet, and deepest violet exude playful boldness with magnetic charm.",
+    emoji:    "🍓",
+    lightKey: "berryLight",
+    darkKey:  "berryDark",
+    colors: [
+      { name: "Soft Apricot", hex: "#F9DBBD", desc: "Delicate peachy shade evoking warmth and freshness" },
+      { name: "Cotton Candy", hex: "#FFA5AB", desc: "Playful sweetness and dreamy charm" },
+      { name: "Blush Rose", hex: "#DA627D", desc: "Vibrant yet elegant, rich tones recall romantic sunsets" },
+      { name: "Cherry Rose", hex: "#A53860", desc: "Luscious deep pink exudes confidence and stirring passion" },
+      { name: "Crimson Violet", hex: "#450920", desc: "Velvety dark berry shade pulses with passionate energy" },
+    ],
+  },
+  {
+    id:       "purple",
+    name:     "Purple Dream",
+    nameCN:   "紫色夢幻",
+    desc:     "Magentas and lavenders swirl together, enveloping a fantasy of majestic, surreal violets.",
+    emoji:    "💜",
+    lightKey: "purpleLight",
+    darkKey:  "purpleDark",
+    colors: [
+      { name: "Dark Amethyst", hex: "#231942", desc: "Intense shadowy violet exudes depth and moody sophistication" },
+      { name: "Dusty Grape", hex: "#5E548E", desc: "Smoky grape delivers understated elegance and timeless sophistication" },
+      { name: "Amethyst Smoke", hex: "#9F86C0", desc: "Misty fusion of lavender and silver, enveloping spaces with mystery" },
+      { name: "Lilac", hex: "#BE95C4", desc: "Delicate vintage purple with silvery undertones for nostalgic elegance" },
+      { name: "Pink Orchid", hex: "#E0B1CB", desc: "Creamy pastel lavender-pink fusion, radiates gentle affection" },
+    ],
+  },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -489,36 +627,44 @@ const FONTS = [
     emoji: "✈️",
   },
   {
-    id: "work",
-    name: "Work Sans",
-    nameCN: "專業",
-    family: "'Work Sans', 'Noto Sans JP', sans-serif",
-    desc: "Professional, balanced, versatile — suited for all content",
-    emoji: "💼",
+    id: "playfair",
+    name: "Playfair Display",
+    nameCN: "優雅襯線",
+    family: "'Playfair Display', 'Noto Serif JP', serif",
+    desc: "Elegant serif with high contrast — sophisticated and editorial",
+    emoji: "📰",
   },
   {
-    id: "manrope",
-    name: "Manrope",
-    nameCN: "優雅",
-    family: "'Manrope', 'Noto Sans JP', sans-serif",
-    desc: "Elegant, refined, minimalist — sophisticated and timeless",
-    emoji: "🎩",
+    id: "cormorant",
+    name: "Cormorant Garamond",
+    nameCN: "經典襯線",
+    family: "'Cormorant Garamond', 'Noto Serif JP', serif",
+    desc: "Classic book typography — refined and timeless",
+    emoji: "📚",
   },
   {
-    id: "dm-sans",
-    name: "DM Sans",
-    nameCN: "清晰",
-    family: "'DM Sans', 'Noto Sans JP', sans-serif",
-    desc: "Crisp, clear, highly legible — optimized for screens",
-    emoji: "📱",
+    id: "dm-serif",
+    name: "DM Serif Display",
+    nameCN: "展示襯線",
+    family: "'DM Serif Display', 'Noto Serif JP', serif",
+    desc: "Bold serif with personality — confident and striking",
+    emoji: "🎭",
   },
   {
-    id: "source",
-    name: "Source Sans",
-    nameCN: "平衡",
-    family: "'Source Sans 3', 'Noto Sans JP', sans-serif",
-    desc: "Balanced, neutral, harmonious — Adobe's trusted workhorse",
-    emoji: "⚖️",
+    id: "jetbrains",
+    name: "JetBrains Mono",
+    nameCN: "等寬字體",
+    family: "'JetBrains Mono', 'Courier New', monospace",
+    desc: "Monospace for technical precision — developer-inspired clarity",
+    emoji: "💻",
+  },
+  {
+    id: "source-code",
+    name: "Source Code Pro",
+    nameCN: "程式碼",
+    family: "'Source Code Pro', 'Courier New', monospace",
+    desc: "Clean monospace — perfect for structured data and flight numbers",
+    emoji: "🔢",
   },
   {
     id: "rubik",
@@ -537,28 +683,28 @@ const FONTS = [
     emoji: "👗",
   },
   {
-    id: "plus-jakarta",
-    name: "Plus Jakarta Sans",
-    nameCN: "簡約",
-    family: "'Plus Jakarta Sans', 'Noto Sans JP', sans-serif",
-    desc: "Clean, modern, minimal — Indonesian-inspired simplicity",
-    emoji: "🏝️",
+    id: "abril",
+    name: "Abril Fatface",
+    nameCN: "粗體展示",
+    family: "'Abril Fatface', 'Noto Serif JP', serif",
+    desc: "Dramatic display serif — bold headlines with vintage charm",
+    emoji: "🎪",
   },
   {
-    id: "lexend",
-    name: "Lexend",
-    nameCN: "易讀",
-    family: "'Lexend', 'Noto Sans JP', sans-serif",
-    desc: "Designed for reading ease — reduces visual stress",
-    emoji: "👓",
+    id: "dancing",
+    name: "Dancing Script",
+    nameCN: "手寫風格",
+    family: "'Dancing Script', 'Noto Sans JP', cursive",
+    desc: "Flowing handwritten style — personal and warm",
+    emoji: "✍️",
   },
   {
-    id: "nunito",
-    name: "Nunito",
-    nameCN: "柔和",
-    family: "'Nunito', 'Noto Sans JP', sans-serif",
-    desc: "Balanced, soft, approachable — universally friendly",
-    emoji: "🌟",
+    id: "pacifico",
+    name: "Pacifico",
+    nameCN: "海灘風",
+    family: "'Pacifico', 'Noto Sans JP', cursive",
+    desc: "Retro surf vibe — laid-back and cheerful",
+    emoji: "🏄",
   },
   {
     id: "montserrat",
@@ -567,14 +713,6 @@ const FONTS = [
     family: "'Montserrat', 'Noto Sans JP', sans-serif",
     desc: "Urban typography inspired by Buenos Aires — confident and strong",
     emoji: "🏙️",
-  },
-  {
-    id: "lato",
-    name: "Lato",
-    nameCN: "經典",
-    family: "'Lato', 'Noto Sans JP', sans-serif",
-    desc: "Warm yet stable — a timeless humanist sans-serif",
-    emoji: "🌍",
   },
 ];
 
@@ -667,7 +805,7 @@ const EMPTY_FORM = {
  * and mobile UX tweaks (tap highlight, overscroll lock, button feedback).
  */
 const makeGlobalStyles = (c, isDark, fontFamily = "'Syne','Noto Sans JP',sans-serif") => `
-  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Noto+Sans+JP:wght@300;400;500;700&family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Work+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;700;800&family=Source+Sans+3:wght@400;600;700&family=Rubik:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Lexend:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&family=Montserrat:wght@400;500;600;700;800&family=Lato:wght@400;700;900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;500;700&family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Serif+Display:wght@400&family=JetBrains+Mono:wght@400;500;600;700&family=Source+Code+Pro:wght@400;500;600;700&family=Rubik:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&family=Abril+Fatface&family=Dancing+Script:wght@400;500;600;700&family=Pacifico&family=Montserrat:wght@400;500;600;700;800&display=swap');
 
   *, *::before, *::after {
     box-sizing: border-box;
@@ -1451,40 +1589,63 @@ function FontGalleryView({ onBack, fontKey, setFontKey, c }) {
                 fontFamily: f.family,
                 textAlign: "left",
                 display: "flex",
-                alignItems: "center",
+                flexDirection: "column",
                 gap: 12,
               }}
             >
-              <span style={{ fontSize: 24, flexShrink: 0 }}>{f.emoji}</span>
-              <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <span style={{ fontSize: 24, flexShrink: 0 }}>{f.emoji}</span>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ 
+                    fontSize: 16, 
+                    fontWeight: 700, 
+                    color: isActive ? c.accent : c.text,
+                    marginBottom: 2
+                  }}>
+                    {f.name}
+                  </div>
+                  <div style={{ fontSize: 11, color: c.sub, fontWeight: 600, marginBottom: 4 }}>
+                    {f.nameCN}
+                  </div>
+                  <div style={{ fontSize: 12, color: c.sub, lineHeight: 1.4, fontStyle: "italic" }}>
+                    {f.desc}
+                  </div>
+                </div>
+                {isActive && (
+                  <div style={{ 
+                    fontSize: 10, 
+                    fontWeight: 700, 
+                    color: c.accent, 
+                    background: `${c.accent}20`, 
+                    borderRadius: 8, 
+                    padding: "3px 10px",
+                    flexShrink: 0
+                  }}>
+                    ✓ 使用中
+                  </div>
+                )}
+              </div>
+              
+              {/* Font Preview Sample */}
+              <div style={{
+                background: c.cardAlt,
+                borderRadius: 10,
+                padding: "10px 12px",
+                borderTop: `1px solid ${c.border}`,
+              }}>
                 <div style={{ 
-                  fontSize: 16, 
+                  fontSize: 18, 
                   fontWeight: 700, 
-                  color: isActive ? c.accent : c.text,
-                  marginBottom: 2
+                  color: c.text, 
+                  marginBottom: 4,
+                  lineHeight: 1.3
                 }}>
-                  {f.name}
+                  CrewLog 我的天空日記
                 </div>
-                <div style={{ fontSize: 11, color: c.sub, fontWeight: 600, marginBottom: 4 }}>
-                  {f.nameCN}
-                </div>
-                <div style={{ fontSize: 12, color: c.sub, lineHeight: 1.4, fontStyle: "italic" }}>
-                  {f.desc}
+                <div style={{ fontSize: 13, color: c.sub, lineHeight: 1.5 }}>
+                  Flight BR189 TPE→NRT 合飛組員紀錄
                 </div>
               </div>
-              {isActive && (
-                <div style={{ 
-                  fontSize: 10, 
-                  fontWeight: 700, 
-                  color: c.accent, 
-                  background: `${c.accent}20`, 
-                  borderRadius: 8, 
-                  padding: "3px 10px",
-                  flexShrink: 0
-                }}>
-                  ✓ 使用中
-                </div>
-              )}
             </button>
           );
         })}
