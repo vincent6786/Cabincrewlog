@@ -1789,8 +1789,6 @@ function SettingsView({
 
   // ── Load accounts + usage + appSettings from Firestore with real-time sync ────
   useEffect(() => {
-    if (authStep !== "app") return;
-    
     // Set up real-time listeners for all admin documents
     const unsubAccounts = onSnapshot(
       ACCOUNTS_DOC,
@@ -1834,7 +1832,7 @@ function SettingsView({
       unsubUsage();
       unsubSettings();
     };
-  }, [username, authStep]);
+  }, [username]);
 
   /** Add a new account to Firestore */
   const addAccount = async () => {
