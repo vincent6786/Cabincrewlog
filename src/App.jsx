@@ -2987,7 +2987,7 @@ function GuideView({ onBack, c }) {
     },
     {
       emoji: "👤", title: "組員頁面", en: "Crew Profile",
-      content: "點任何組員可以進入個人頁面：\n• 查看你們所有的合飛紀錄\n• 編輯組員基本資料（大家共享）\n• 新增長期筆記（大家共享）\n• 快速設定紅黃綠燈\n• 編輯或刪除個別飛行紀錄",
+      content: "點任何組員可以進入個人頁面：\n• 查看你們所有的合飛紀錄\n• 編輯組員基本資料（大家共享）\n• 新增公開筆記（大家共享）\n• 快速設定紅黃綠燈\n• 編輯或刪除個別飛行紀錄",
     },
     {
       emoji: "⬇", title: "備份資料", en: "Backup",
@@ -4881,7 +4881,7 @@ export default function App() {
           {/* Long-term notes (shared) */}
           <div style={{ marginBottom: 16 }}>
             <div style={{ fontSize: 9, letterSpacing: 3, color: c.sub, fontWeight: 700, marginBottom: 8, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span>長期筆記 NOTES</span>
+              <span>公開筆記 NOTES</span>
               <button
                 onClick={() => {
                   if (editNotes) { patchCrew(m.id, { notes: tempNotes }); setEditNotes(false); }
