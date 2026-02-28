@@ -96,6 +96,29 @@ const formatTimeAgo = (timestamp) => {
   return `${day} ${month} ${time}`;
 };
 
+/**
+ * Auto-formats class input to include "CLASS" prefix.
+ * @param {string} input - Raw input string (e.g., "2024B", "24G", "CLASS 2024B")
+ * @returns {string} - Formatted string (e.g., "CLASS 2024B")
+ */
+const formatClassInput = (input) => {
+  const trimmed = input.trim().toUpperCase();
+  if (!trimmed) return "";
+  
+  // If already starts with "CLASS", return as-is
+  if (trimmed.startsWith("CLASS ")) return trimmed;
+  
+  // If it looks like a class code (year + letter, e.g., "2024B" or "24G")
+  // automatically add "CLASS" prefix
+  const classPattern = /^(\d{2,4}[A-Z])$/;
+  if (classPattern.test(trimmed)) {
+    return `CLASS ${trimmed}`;
+  }
+  
+  // Otherwise return as-is (for manual "CLASS" typing or other formats)
+  return trimmed;
+};
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 // §3  THEME PALETTES
@@ -1764,29 +1787,54 @@ function SettingsView({
     width:        "100%",
   };
 
-  // ── Load accounts + usage + appSettings from Firestore on mount ────────────────
+  // ── Load accounts + usage + appSettings from Firestore with real-time sync ────
   useEffect(() => {
-    Promise.all([getDoc(ACCOUNTS_DOC), getDoc(USAGE_DOC), getDoc(APP_SETTINGS_DOC)])
-      .then(([accSnap, usageSnap, settSnap]) => {
-        const accs = accSnap.exists() ? (accSnap.data().accounts || {}) : {};
+    if (authStep !== "app") return;
+    
+    // Set up real-time listeners for all admin documents
+    const unsubAccounts = onSnapshot(
+      ACCOUNTS_DOC,
+      (snap) => {
+        const accs = snap.exists() ? (snap.data().accounts || {}) : {};
         setAccounts(accs);
         // Initialize tempEmail with current user's email
         const userAcct = typeof accs[username] === "object" 
           ? accs[username] 
           : { password: accs[username], email: "" };
         setTempEmail(userAcct.email || "");
-        
-        setUsageData(usageSnap.exists() ? (usageSnap.data().usage   || {}) : {});
-        if (settSnap.exists()) {
-          const s = settSnap.data();
+        setAccsLoading(false);
+      },
+      () => setAccsLoading(false)
+    );
+
+    const unsubUsage = onSnapshot(
+      USAGE_DOC,
+      (snap) => {
+        setUsageData(snap.exists() ? (snap.data().usage || {}) : {});
+      },
+      () => {}
+    );
+
+    const unsubSettings = onSnapshot(
+      APP_SETTINGS_DOC,
+      (snap) => {
+        if (snap.exists()) {
+          const s = snap.data();
           setRegOpen(s.registrationOpen === true);
-          setShowAcStats(s.showAcStats    !== false); // default true
+          setShowAcStats(s.showAcStats !== false); // default true
           setShowRouteStats(s.showRouteStats !== false); // default true
         }
-      })
-      .catch(() => {})
-      .finally(() => setAccsLoading(false));
-  }, [username]);
+      },
+      () => {}
+    );
+
+    // Clean up all listeners on unmount
+    return () => {
+      unsubAccounts();
+      unsubUsage();
+      unsubSettings();
+    };
+  }, [username, authStep]);
 
   /** Add a new account to Firestore */
   const addAccount = async () => {
@@ -4476,7 +4524,7 @@ export default function App() {
             <ClearableInput value={newCrew.id}        onChange={e => setNewCrew(n => ({ ...n, id:        e.target.value }))} placeholder="員工 ID *"        autoComplete="off" style={{ ...inp, fontSize: 13, padding: "9px 12px" }} c={c} />
             <ClearableInput value={newCrew.nickname}  onChange={e => setNewCrew(n => ({ ...n, nickname:  e.target.value }))} placeholder="Nickname *"        autoComplete="off" style={{ ...inp, fontSize: 13, padding: "9px 12px" }} c={c} />
             <ClearableInput value={newCrew.name}      onChange={e => setNewCrew(n => ({ ...n, name:      e.target.value }))} placeholder="姓名 (中文/日文)" autoComplete="off" style={{ ...inp, fontSize: 13, padding: "9px 12px" }} c={c} />
-            <ClearableInput value={newCrew.seniority} onChange={e => setNewCrew(n => ({ ...n, seniority: e.target.value }))} placeholder="期別 e.g. 24G"     autoComplete="off" style={{ ...inp, fontSize: 13, padding: "9px 12px" }} c={c} />
+            <ClearableInput value={newCrew.seniority} onChange={e => setNewCrew(n => ({ ...n, seniority: formatClassInput(e.target.value) }))} placeholder="CLASS 2024B"     autoComplete="off" style={{ ...inp, fontSize: 13, padding: "9px 12px" }} c={c} />
           </div>
           {addCrewErr && <div style={{ color: "#FF453A", fontSize: 12, marginBottom: 8 }}>{addCrewErr}</div>}
           <button
@@ -4662,6 +4710,117 @@ export default function App() {
               </button>
             ))}
           </div>
+
+          {/* Vote Statistics (collapsible) - positioned near voting buttons */}
+          {Object.keys(m.votes || {}).length > 0 && (
+            <div style={{ marginTop: 10 }}>
+              {/* Toggle button */}
+              <button
+                onClick={() => setShowVoteStats(!showVoteStats)}
+                style={{
+                  width: "100%",
+                  background: showVoteStats ? c.accent : "transparent",
+                  border: `1px solid ${c.border}`,
+                  borderRadius: 10,
+                  padding: "8px 12px",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  color: showVoteStats ? c.adk : c.text,
+                  fontWeight: 700,
+                  fontSize: 10,
+                  letterSpacing: 1,
+                  transition: "all 0.2s"
+                }}
+              >
+                <span style={{ fontSize: 9 }}>{showVoteStats ? "▼" : "▶"}</span>
+                <span style={{ flex: 1, textAlign: "left" }}>票數統計 ({Object.keys(m.votes || {}).length})</span>
+              </button>
+
+              {/* Expanded statistics panel */}
+              {showVoteStats && (
+                <div style={{
+                  background: "rgba(0,0,0,0.03)",
+                  borderRadius: 10,
+                  padding: "10px",
+                  marginTop: 6,
+                }}>
+                  {/* Vote breakdown */}
+                  <div style={{ display: "flex", gap: 6, marginBottom: 10 }}>
+                    {Object.entries(STATUS_MAP).map(([k, v]) => {
+                      const count = Object.values(m.votes || {}).filter(vote => vote.color === k).length;
+                      return (
+                        <div
+                          key={k}
+                          style={{
+                            flex: 1,
+                            textAlign: "center",
+                            padding: "6px 4px",
+                            borderRadius: 8,
+                            background: v.bg,
+                            border: `1px solid ${v.border}`
+                          }}
+                        >
+                          <div style={{ fontSize: 16 }}>{v.emoji}</div>
+                          <div style={{ fontSize: 14, fontWeight: 800, color: v.color, marginTop: 2 }}>{count}</div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Recent votes section */}
+                  <div style={{
+                    fontSize: 8,
+                    letterSpacing: 1.5,
+                    color: c.sub,
+                    fontWeight: 700,
+                    marginBottom: 6,
+                    textAlign: "center",
+                    borderTop: `1px solid ${c.border}`,
+                    paddingTop: 8
+                  }}>
+                    RECENT VOTES
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                    {Object.entries(m.votes || {})
+                      .sort((a, b) => b[1].timestamp - a[1].timestamp)
+                      .slice(0, 3)
+                      .map(([user, vote]) => {
+                        const si = STATUS_MAP[vote.color];
+                        return (
+                          <div
+                            key={user}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 6,
+                              padding: "4px 8px",
+                              background: "rgba(255,255,255,0.5)",
+                              borderRadius: 6,
+                              border: `1px solid ${c.border}`
+                            }}
+                          >
+                            <span style={{
+                              fontWeight: 700,
+                              color: user === username ? c.accent : c.text,
+                              fontSize: 11,
+                              flex: 1
+                            }}>
+                              {user === username ? "YOU" : user}
+                            </span>
+                            <span style={{ fontSize: 13 }}>{si.emoji}</span>
+                            <span style={{ fontSize: 9, color: c.sub }}>
+                              {formatTimeAgo(vote.timestamp)}
+                            </span>
+                          </div>
+                        );
+                      })}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* ── Profile body ── */}
@@ -4690,7 +4849,7 @@ export default function App() {
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                 <ClearableInput value={tempCrewInfo.nickname}  onChange={e => setTempCrewInfo(t => ({ ...t, nickname:  e.target.value }))} placeholder="Nickname *"   autoComplete="off" style={{ ...inp, borderRadius: 12, padding: "10px 14px" }} c={c} />
                 <ClearableInput value={tempCrewInfo.name}      onChange={e => setTempCrewInfo(t => ({ ...t, name:      e.target.value }))} placeholder="姓名"          autoComplete="off" style={{ ...inp, borderRadius: 12, padding: "10px 14px" }} c={c} />
-                <ClearableInput value={tempCrewInfo.seniority} onChange={e => setTempCrewInfo(t => ({ ...t, seniority: e.target.value }))} placeholder="期別 e.g. 24G" autoComplete="off" style={{ ...inp, borderRadius: 12, padding: "10px 14px" }} c={c} />
+                <ClearableInput value={tempCrewInfo.seniority} onChange={e => setTempCrewInfo(t => ({ ...t, seniority: formatClassInput(e.target.value) }))} placeholder="CLASS 2024B" autoComplete="off" style={{ ...inp, borderRadius: 12, padding: "10px 14px" }} c={c} />
               </div>
             ) : (
               <div style={{ background: c.cardAlt, border: `1px solid ${c.border}`, borderRadius: 12, padding: "10px 14px", fontSize: 13, color: c.sub, lineHeight: 1.8 }}>
@@ -4741,138 +4900,6 @@ export default function App() {
                   {m.notes || "尚無備忘。No notes yet."}
                 </div>
             }
-          </div>
-
-          {/* Vote Statistics (collapsible) */}
-          <div style={{ marginBottom: 16 }}>
-            {/* Toggle button */}
-            <button
-              onClick={() => setShowVoteStats(!showVoteStats)}
-              style={{
-                width: "100%",
-                background: showVoteStats ? c.accent : c.card,
-                border: `1px solid ${c.border}`,
-                borderRadius: 12,
-                padding: "12px 14px",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                color: showVoteStats ? c.adk : c.text,
-                fontWeight: 700,
-                fontSize: 11,
-                letterSpacing: 2,
-                marginBottom: showVoteStats ? 8 : 0,
-                transition: "all 0.2s"
-              }}
-            >
-              <span>{showVoteStats ? "▼" : "▶"}</span>
-              <span style={{ flex: 1, textAlign: "left" }}>票數統計 VOTE BREAKDOWN</span>
-              <span style={{ fontSize: 10, opacity: 0.8 }}>
-                ({Object.keys(m.votes || {}).length} votes)
-              </span>
-            </button>
-
-            {/* Expanded statistics panel */}
-            {showVoteStats && (
-              <div style={{
-                background: c.cardAlt,
-                border: `1px solid ${c.border}`,
-                borderRadius: 12,
-                padding: "14px",
-              }}>
-                {/* Vote breakdown */}
-                <div style={{ display: "flex", gap: 8, marginBottom: 14 }}>
-                  {Object.entries(STATUS_MAP).map(([k, v]) => {
-                    const count = Object.values(m.votes || {}).filter(vote => vote.color === k).length;
-                    return (
-                      <div
-                        key={k}
-                        style={{
-                          flex: 1,
-                          textAlign: "center",
-                          padding: "8px 4px",
-                          borderRadius: 8,
-                          background: v.bg,
-                          border: `1px solid ${v.border}`
-                        }}
-                      >
-                        <div style={{ fontSize: 18 }}>{v.emoji}</div>
-                        <div style={{ fontSize: 16, fontWeight: 800, color: v.color, marginTop: 2 }}>{count}</div>
-                        <div style={{ fontSize: 8, color: v.color, fontWeight: 700, marginTop: 2, textTransform: "uppercase" }}>
-                          {k}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {/* Recent votes section */}
-                {Object.keys(m.votes || {}).length > 0 && (
-                  <>
-                    <div style={{
-                      fontSize: 9,
-                      letterSpacing: 2,
-                      color: c.sub,
-                      fontWeight: 700,
-                      marginBottom: 8,
-                      textAlign: "center",
-                      borderTop: `1px solid ${c.border}`,
-                      paddingTop: 12
-                    }}>
-                      RECENT VOTES
-                    </div>
-                    <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                      {Object.entries(m.votes || {})
-                        .sort((a, b) => b[1].timestamp - a[1].timestamp)
-                        .slice(0, 3)
-                        .map(([user, vote]) => {
-                          const si = STATUS_MAP[vote.color];
-                          return (
-                            <div
-                              key={user}
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 8,
-                                padding: "6px 10px",
-                                background: c.card,
-                                borderRadius: 8,
-                                border: `1px solid ${c.border}`
-                              }}
-                            >
-                              <span style={{
-                                fontWeight: 700,
-                                color: user === username ? c.accent : c.text,
-                                fontSize: 12,
-                                flex: 1
-                              }}>
-                                {user === username ? "YOU" : user}
-                              </span>
-                              <span style={{ fontSize: 14 }}>{si.emoji}</span>
-                              <span style={{ fontSize: 10, color: c.sub }}>
-                                {formatTimeAgo(vote.timestamp)}
-                              </span>
-                            </div>
-                          );
-                        })}
-                    </div>
-                  </>
-                )}
-
-                {/* Empty state */}
-                {Object.keys(m.votes || {}).length === 0 && (
-                  <div style={{
-                    textAlign: "center",
-                    color: c.sub,
-                    fontSize: 12,
-                    padding: "12px 0"
-                  }}>
-                    No votes yet
-                  </div>
-                )}
-              </div>
-            )}
           </div>
 
           {/* Private flight history timeline */}
