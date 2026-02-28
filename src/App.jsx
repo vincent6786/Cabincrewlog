@@ -68,6 +68,34 @@ const mkId = () => Date.now().toString(36) + Math.random().toString(36).slice(2,
 /** Returns today's date as an ISO string (YYYY-MM-DD). */
 const today = () => new Date().toISOString().slice(0, 10);
 
+/**
+ * Formats a timestamp into a human-readable "time ago" string.
+ * @param {number|string} timestamp - Unix timestamp or ISO date string
+ * @returns {string} - Formatted time string (e.g., "just now", "15m ago", "3h ago", "2d ago", "15 Feb 14:30")
+ */
+const formatTimeAgo = (timestamp) => {
+  if (!timestamp) return "—";
+  const now = Date.now();
+  const then = typeof timestamp === "number" ? timestamp : new Date(timestamp).getTime();
+  const diff = now - then;
+  const seconds = Math.floor(diff / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+
+  if (seconds < 60) return "just now";
+  if (minutes < 60) return `${minutes}m ago`;
+  if (hours < 24) return `${hours}h ago`;
+  if (days < 7) return `${days}d ago`;
+
+  // For dates older than 7 days, show "DD MMM HH:MM"
+  const date = new Date(then);
+  const day = date.getDate();
+  const month = date.toLocaleDateString("en-GB", { month: "short" });
+  const time = date.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false });
+  return `${day} ${month} ${time}`;
+};
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 // §3  THEME PALETTES
@@ -761,6 +789,7 @@ const flightDoc = (username) => doc(db, "crewlog", `flights-${username}`);
     status:     "red" | "yellow" | "green" | null
     tags:       string[] — subset of allTags
     notes:      string   — long-form shared notes
+    votes:      object   — { [username]: { color: "red"|"yellow"|"green", timestamp: number } }
   }
 
   Flight log entry:
@@ -2402,15 +2431,13 @@ function SettingsView({
                     {/* Header row */}
                     <div style={{ display: "flex", gap: 8, padding: "4px 8px", marginBottom: 4 }}>
                       <span style={{ flex: 1, fontSize: 9, letterSpacing: 2, color: c.sub, fontWeight: 700 }}>USERNAME</span>
-                      <span style={{ width: 80, fontSize: 9, letterSpacing: 1, color: c.sub, fontWeight: 700, textAlign: "center" }}>LAST LOGIN</span>
+                      <span style={{ width: 100, fontSize: 9, letterSpacing: 1, color: c.sub, fontWeight: 700, textAlign: "center" }}>LAST LOGIN</span>
                       <span style={{ width: 36, fontSize: 9, letterSpacing: 1, color: c.sub, fontWeight: 700, textAlign: "center" }}>✈</span>
                       <span style={{ width: 24 }} />
                     </div>
                     {Object.keys(accounts).map(u => {
                       const stat      = usageData[u] || {};
-                      const lastLogin = stat.lastLogin
-                        ? new Date(stat.lastLogin).toLocaleDateString("en-GB", { day: "2-digit", month: "short" })
-                        : "—";
+                      const lastLogin = stat.lastLogin ? formatTimeAgo(stat.lastLogin) : "—";
                       const flights   = stat.flightCount ?? "—";
                       const daysAgo   = stat.lastLogin
                         ? Math.floor((Date.now() - new Date(stat.lastLogin)) / 86400000)
@@ -2423,7 +2450,7 @@ function SettingsView({
                             {u === username && <span style={{ fontSize: 9, color: c.accent, marginLeft: 6 }}>YOU</span>}
                             {inactive && <span style={{ fontSize: 9, color: "#FF453A", marginLeft: 6 }}>INACTIVE {daysAgo}d</span>}
                           </div>
-                          <span style={{ width: 80, fontSize: 10, color: c.sub, textAlign: "center" }}>{lastLogin}</span>
+                          <span style={{ width: 100, fontSize: 10, color: c.sub, textAlign: "center" }}>{lastLogin}</span>
                           <span style={{ width: 36, fontSize: 12, fontWeight: 700, color: c.accent, textAlign: "center" }}>{flights}</span>
                           {delAccConfirm === u ? (
                             <div style={{ display: "flex", gap: 4, flexShrink: 0 }}>
@@ -3254,6 +3281,7 @@ export default function App() {
   const [tempCrewInfo,   setTempCrewInfo]   = useState({ name: "", nickname: "", seniority: "" });
   const [editNotes,      setEditNotes]      = useState(false);
   const [tempNotes,      setTempNotes]      = useState("");
+  const [showVoteStats,  setShowVoteStats]  = useState(false); // collapsible vote statistics panel
   const [confirmDel,     setConfirmDel]     = useState(null);  // flight id pending delete
   const [confirmDelCrew, setConfirmDelCrew] = useState(false);
 
@@ -3316,8 +3344,22 @@ export default function App() {
       SHARED_DOC,
       (snap) => {
         isRemoteShared.current = true;
-        if (snap.exists()) { const d = snap.data(); setCrew(d.crew || INITIAL_CREW); setRoutes(d.routes || []); }
-        else               { setCrew(INITIAL_CREW); setRoutes([]); }
+        if (snap.exists()) { 
+          const d = snap.data(); 
+          // Ensure all crew members have votes field initialized
+          const crewWithVotes = (d.crew || INITIAL_CREW).map(m => ({ 
+            ...m, 
+            votes: m.votes || {} 
+          }));
+          setCrew(crewWithVotes); 
+          setRoutes(d.routes || []); 
+        }
+        else { 
+          // Initialize INITIAL_CREW with votes field
+          const crewWithVotes = INITIAL_CREW.map(m => ({ ...m, votes: {} }));
+          setCrew(crewWithVotes); 
+          setRoutes([]); 
+        }
         setSyncStatus("synced");
         setReady(true);
       },
@@ -3656,7 +3698,11 @@ export default function App() {
 
   /** Merges an imported JSON backup into local state. */
   const handleImport = useCallback((data) => {
-    if (data.crew        && Array.isArray(data.crew))       setCrew(data.crew);
+    if (data.crew && Array.isArray(data.crew)) {
+      // Ensure all imported crew members have votes field initialized
+      const crewWithVotes = data.crew.map(m => ({ ...m, votes: m.votes || {} }));
+      setCrew(crewWithVotes);
+    }
     if (data.routes      && Array.isArray(data.routes))     setRoutes(data.routes);
     if (Array.isArray(data.flights))                        setFlights(data.flights);
     if (Array.isArray(data.customTags))                     setCustomTags(data.customTags);
@@ -3670,6 +3716,48 @@ export default function App() {
   /** Merges a partial patch object into a crew member. */
   const patchCrew = (id, patch) =>
     setCrew(cr => cr.map(m => m.id === id ? { ...m, ...patch } : m));
+
+  /** 
+   * Records a status vote for a crew member.
+   * Updates both the crew member's status AND adds/updates the vote in their votes object.
+   * @param {string} id - crew member ID
+   * @param {string|null} newStatus - "red", "yellow", "green", or null to remove vote
+   */
+  const voteStatus = (id, newStatus) => {
+    setCrew(cr => cr.map(m => {
+      if (m.id !== id) return m;
+      
+      // Initialize votes object if it doesn't exist
+      const votes = m.votes || {};
+      
+      // Update or remove this user's vote
+      const updatedVotes = { ...votes };
+      if (newStatus === null) {
+        delete updatedVotes[username];
+      } else {
+        updatedVotes[username] = {
+          color: newStatus,
+          timestamp: Date.now()
+        };
+      }
+      
+      // Calculate most recent status from all votes (use the latest vote's color)
+      let latestStatus = null;
+      let latestTime = 0;
+      Object.entries(updatedVotes).forEach(([user, vote]) => {
+        if (vote.timestamp > latestTime) {
+          latestTime = vote.timestamp;
+          latestStatus = vote.color;
+        }
+      });
+      
+      return {
+        ...m,
+        votes: updatedVotes,
+        status: latestStatus
+      };
+    }));
+  };
 
   /** Toggles a tag on a crew member (adds if absent, removes if present). */
   const flipTag = (id, tag) =>
@@ -3697,6 +3785,7 @@ export default function App() {
     setEditNotes(false);
     setConfirmDel(null);
     setConfirmDelCrew(false);
+    setShowVoteStats(false); // reset vote statistics panel
     setView("profile");
   };
 
@@ -4405,6 +4494,7 @@ export default function App() {
                 status:    null,
                 tags:      [],
                 notes:     "",
+                votes:     {}, // initialize empty votes object
               }]);
               setNewCrew({ id: "", name: "", nickname: "", seniority: "" });
             }}
@@ -4560,7 +4650,7 @@ export default function App() {
             {Object.entries(STATUS_MAP).map(([k, v]) => (
               <button
                 key={k}
-                onClick={() => patchCrew(m.id, { status: m.status === k ? null : k })}
+                onClick={() => voteStatus(m.id, m.status === k ? null : k)}
                 style={{
                   flex: 1, background: m.status === k ? v.bg : c.pill,
                   border: `1px solid ${m.status === k ? v.color : c.border}`,
@@ -4651,6 +4741,138 @@ export default function App() {
                   {m.notes || "尚無備忘。No notes yet."}
                 </div>
             }
+          </div>
+
+          {/* Vote Statistics (collapsible) */}
+          <div style={{ marginBottom: 16 }}>
+            {/* Toggle button */}
+            <button
+              onClick={() => setShowVoteStats(!showVoteStats)}
+              style={{
+                width: "100%",
+                background: showVoteStats ? c.accent : c.card,
+                border: `1px solid ${c.border}`,
+                borderRadius: 12,
+                padding: "12px 14px",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                color: showVoteStats ? c.adk : c.text,
+                fontWeight: 700,
+                fontSize: 11,
+                letterSpacing: 2,
+                marginBottom: showVoteStats ? 8 : 0,
+                transition: "all 0.2s"
+              }}
+            >
+              <span>{showVoteStats ? "▼" : "▶"}</span>
+              <span style={{ flex: 1, textAlign: "left" }}>票數統計 VOTE BREAKDOWN</span>
+              <span style={{ fontSize: 10, opacity: 0.8 }}>
+                ({Object.keys(m.votes || {}).length} votes)
+              </span>
+            </button>
+
+            {/* Expanded statistics panel */}
+            {showVoteStats && (
+              <div style={{
+                background: c.cardAlt,
+                border: `1px solid ${c.border}`,
+                borderRadius: 12,
+                padding: "14px",
+              }}>
+                {/* Vote breakdown */}
+                <div style={{ display: "flex", gap: 8, marginBottom: 14 }}>
+                  {Object.entries(STATUS_MAP).map(([k, v]) => {
+                    const count = Object.values(m.votes || {}).filter(vote => vote.color === k).length;
+                    return (
+                      <div
+                        key={k}
+                        style={{
+                          flex: 1,
+                          textAlign: "center",
+                          padding: "8px 4px",
+                          borderRadius: 8,
+                          background: v.bg,
+                          border: `1px solid ${v.border}`
+                        }}
+                      >
+                        <div style={{ fontSize: 18 }}>{v.emoji}</div>
+                        <div style={{ fontSize: 16, fontWeight: 800, color: v.color, marginTop: 2 }}>{count}</div>
+                        <div style={{ fontSize: 8, color: v.color, fontWeight: 700, marginTop: 2, textTransform: "uppercase" }}>
+                          {k}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Recent votes section */}
+                {Object.keys(m.votes || {}).length > 0 && (
+                  <>
+                    <div style={{
+                      fontSize: 9,
+                      letterSpacing: 2,
+                      color: c.sub,
+                      fontWeight: 700,
+                      marginBottom: 8,
+                      textAlign: "center",
+                      borderTop: `1px solid ${c.border}`,
+                      paddingTop: 12
+                    }}>
+                      RECENT VOTES
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                      {Object.entries(m.votes || {})
+                        .sort((a, b) => b[1].timestamp - a[1].timestamp)
+                        .slice(0, 3)
+                        .map(([user, vote]) => {
+                          const si = STATUS_MAP[vote.color];
+                          return (
+                            <div
+                              key={user}
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 8,
+                                padding: "6px 10px",
+                                background: c.card,
+                                borderRadius: 8,
+                                border: `1px solid ${c.border}`
+                              }}
+                            >
+                              <span style={{
+                                fontWeight: 700,
+                                color: user === username ? c.accent : c.text,
+                                fontSize: 12,
+                                flex: 1
+                              }}>
+                                {user === username ? "YOU" : user}
+                              </span>
+                              <span style={{ fontSize: 14 }}>{si.emoji}</span>
+                              <span style={{ fontSize: 10, color: c.sub }}>
+                                {formatTimeAgo(vote.timestamp)}
+                              </span>
+                            </div>
+                          );
+                        })}
+                    </div>
+                  </>
+                )}
+
+                {/* Empty state */}
+                {Object.keys(m.votes || {}).length === 0 && (
+                  <div style={{
+                    textAlign: "center",
+                    color: c.sub,
+                    fontSize: 12,
+                    padding: "12px 0"
+                  }}>
+                    No votes yet
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Private flight history timeline */}
